@@ -171,7 +171,7 @@ export default function Emit() {
         }     
     }
 }
-const judgeType2 = (node, type, param) => {
+    const judgeType2 = (node, type, param) => {
     if (type === 'faqi'){
         console.log("发起人已经发起审批")
         for (let i in flowMap[node]){
