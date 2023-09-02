@@ -1,70 +1,52 @@
-# Getting Started with Create React App
+# 组件制作审批流程
+注意事项：那就是初始化 LogicFlow 实例的时候，传入的参数 container, 必须要 dom 上存在这个节点，不然会报错
+在react中使用useRef钩子函数
+const refContainer = useRef();
+const logicflow = new LogicFlow({
+      container: refContainer.current,  // 指定container
+      grid: true,
+      width: 1000,
+      height: 500,
+    });
+const data = {
+    node: [
+        {
+            id: 3， // id唯一
+            type: 'rect'， // 结点形状：长方形等
+            x: 200，  // 坐标
+            y: 300，
+            text: { x: 200, y: 200, value: "审批人" },  // 节点默认文本
+            properties: {
+                isPass: true
+            }  // 在审批流业务场景中，节点是否通过标志，通过为绿色
+        }
+    ],
+    edges: [
+        {
+            sourceNodeId: "3",  //  起始结点
+            targetNodeId: "4",  //  结束结点
+            type: "bezier"      //  线段类型，有"line"、"ployline"、"bezier"
+        }
+    ]
+}
+logicflow.render(data)  // 将数据渲染到画布上
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+type:用户节点或者连线的类型，这个类型也可以是自己定义的
 
-## Available Scripts
-
-In the project directory, you can run:
-
-### `npm start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+# Node节点
+基础节点类型
+    矩形：`rect` 
+    圆形: `circle`
+    椭圆: `ellipse`
+    多边形: `polygon`
+    菱形: `diamond`
+    文本: `text`
+    HTML: `html`
+## 自定义节点
+### 基于继承
+继承内置节点，使用面向对象的重写机制，重写节点样式相关方法
+外观属性表示控制着节点边框、颜色这类偏外观的属性
+形状属性表示节点的宽width、高height，矩形的圆角radius, 圆形的半径r, 多边形的顶点points等这些控制着节点最终形状的属性。需要在setAttributes方法或initNodeData方法中进行。
+需要一个更加复杂的节点时，可以使用 LogicFlow 提供的自定义节点view的方式。
+# 事件
+`on`方法进行事件监听。`lf.on("node:click,edge:click", (data)=>{})`
